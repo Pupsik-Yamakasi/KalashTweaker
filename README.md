@@ -24,3 +24,5 @@ KALASH TWEAKER — бесплатная утилита для оптимизац
 ## Комьюнити
 
 Вопросы, фидбек и новости: [Telegram](https://t.me/Kalash_Optimization)
+
+SHA-256: DBCB0EBE34B7DB1D7ED7E0C07CF4A3F19F4EDE3274A702CE52392D643C1411B6

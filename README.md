@@ -1,4 +1,4 @@
-# KALASH TWEAKER
+﻿# KALASH TWEAKER
 
 Легкая и быстрая настройка твоего железа.
 
@@ -16,17 +16,20 @@
 - История изменений и откат твиков
 - Экспорт и импорт настроек
 - Автообновление и кнопка «Исключить в Windows Defender»
+- Лицензия PRO: новые агрессивные твики (UAC OFF, Prefetch/Superfetch OFF, авторемонт DISM+SFC, отключение EPP, PRO Мега-пакет)
 - Портативная: один exe, Python не нужен, установка не требуется
 
 ## Скачать
 
 Скачать последнюю версию можно в [Releases](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/latest):
 
-[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.0.0/KALASH_TWEAKER_v2.exe)
+[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.1/KALASH_TWEAKER_v2.exe)
 
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу → «Свойства» → «Разблокировать».
 
-SHA-256: `0C864EEE70E16388BA5822ADD8DE4C2218FCF8648D0F27E6828CDC011D397873`
+SHA-256: `EA292A0F2DC581D18B5340D042B20E1DA0B68A499B7EC08B512C3041A9203B3B`
+
+Хочешь агрессивные PRO-твики? Напиши боту продавца: [@ottorpf_bot](https://t.me/ottorpf_bot).
 
 ## Комьюнити
 

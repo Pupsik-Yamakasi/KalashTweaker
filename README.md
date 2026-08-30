@@ -17,7 +17,7 @@ KALASH TWEAKER — бесплатная утилита для оптимизац
 
 Последняя версия — в [Releases](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/latest):
 
-[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.0/KALASH_TWEAKER_v2.exe)
+[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.0.0/KALASH_TWEAKER_v2.exe)
 
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу — Свойства — Разблокировать.
 
@@ -25,4 +25,4 @@ KALASH TWEAKER — бесплатная утилита для оптимизац
 
 Вопросы, фидбек и новости: [Telegram](https://t.me/Kalash_Optimization)
 
-SHA-256: B68B00B93CF012637AA46B84EEA11F90AE35129CD7D35DA2BE09AD28A2342060
+SHA-256: 0C864EEE70E16388BA5822ADD8DE4C2218FCF8648D0F27E6828CDC011D397873

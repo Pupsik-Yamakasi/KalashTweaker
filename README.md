@@ -1,10 +1,14 @@
 # KALASH TWEAKER
 
+![KALASH TWEAKER](https://pupsik-yamakasi.github.io/KalashTweaker/screenshot.png)
+
 Лёгкая и быстрая настройка твоего железа.
 
 KALASH TWEAKER — бесплатная утилита для оптимизации Windows 10 и Windows 11: настройка системы под игры, твики, бенчмарк, мониторинг, трей и Discord Rich Presence.
 
 ## Возможности
+
+![KALASH TWEAKER](https://pupsik-yamakasi.github.io/KalashTweaker/screenshot.png)
 
 - Оптимизация и твики Windows (CPU, RAM, GPU, сеть, диск, приватность)
 - Бенчмарк процессора, памяти и диска
@@ -15,6 +19,8 @@ KALASH TWEAKER — бесплатная утилита для оптимизац
 
 ## Скачать
 
+![KALASH TWEAKER](https://pupsik-yamakasi.github.io/KalashTweaker/screenshot.png)
+
 Последняя версия — в [Releases](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/latest):
 
 [KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.0.0/KALASH_TWEAKER_v2.exe)
@@ -22,6 +28,8 @@ KALASH TWEAKER — бесплатная утилита для оптимизац
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу — Свойства — Разблокировать.
 
 ## Комьюнити
+
+![KALASH TWEAKER](https://pupsik-yamakasi.github.io/KalashTweaker/screenshot.png)
 
 Вопросы, фидбек и новости: [Telegram](https://t.me/Kalash_Optimization)
 

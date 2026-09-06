@@ -1,4 +1,4 @@
-# KALASH TWEAKER
+﻿# KALASH TWEAKER
 
 Легкая и быстрая настройка твоего железа.
 
@@ -27,7 +27,7 @@
 
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу → «Свойства» → «Разблокировать».
 
-SHA-256: `50084EC4FED303417BC69DA9902A4C9422713161AC5BA7852CECB8F95046C414`
+SHA-256: `D68E5BBAE3A2CBBB465347060E1F2FD3E4F6CFBC6A1E20888D03A40F2685E18B`
 
 Хочешь агрессивные PRO-твики? Напиши боту продавца: [@ottorpf_bot](https://t.me/ottorpf_bot).
 

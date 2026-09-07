@@ -23,11 +23,11 @@
 
 Скачать последнюю версию можно в [Releases](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/latest):
 
-[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.1.0.3/KALASH_TWEAKER_v2.exe)
+[KALASH_TWEAKER_v2.exe](https://github.com/Pupsik-Yamakasi/KalashTweaker/releases/download/v2.1.0.4/KALASH_TWEAKER_v2.exe)
 
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу → «Свойства» → «Разблокировать».
 
-SHA-256: `6410AE3A7ADDD722C97A1DE271D125AF8957E90FCE9A9DD1531B6D130933C1DD`
+SHA-256: `ECE953CB8F5D258E7637ED2AB4DD0C55D998C831737E99C8B73DB94DDE7A8089`
 
 Хочешь агрессивные PRO-твики? Напиши боту продавца: [@ottorpf_bot](https://t.me/ottorpf_bot).
 

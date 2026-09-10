@@ -1,6 +1,5 @@
 ﻿# KALASH TWEAKER
 
-Легкая и быстрая настройка твоего железа.
 
 ![KALASH TWEAKER](https://pupsik-yamakasi.github.io/KalashTweaker/screenshot.png)
 

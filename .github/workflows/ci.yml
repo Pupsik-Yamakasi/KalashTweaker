@@ -1,0 +1,34 @@
+name: Verify build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+      - name: Run regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate frontend syntax
+        shell: pwsh
+        run: |
+          node --check web/app.js
+          node --check web/biosData.js
+          node --check web/bgNet.js
+      - name: Build unsigned verification artifact
+        run: python -m PyInstaller build.spec --noconfirm --clean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KALASH_TWEAKER_unsigned
+          path: dist/KALASH_TWEAKER_v2.exe
+          if-no-files-found: error

@@ -1,0 +1,66 @@
+# -*- mode: python ; coding: utf-8 -*-
+
+a = Analysis(
+    ['main.py'],
+    pathex=[],
+    binaries=[],
+    datas=[
+        ('web', 'web'),
+        ('extras', 'extras'),
+        ('LICENSE.txt', '.'),
+    ],
+    hiddenimports=[
+        'webview',
+        'webview.platforms.edgechromium',
+        'webview.platforms.mshtml',
+        'webview.platforms.cef',
+        'webview.platforms.winforms',
+        'pystray',
+        'pystray._win32',
+        'PIL.Image',
+        'psutil',
+        'bottle',
+        'pythonnet',
+        'clr_loader',
+        'proxy_tools',
+    ],
+    hookspath=[],
+    hooksconfig={},
+    runtime_hooks=[],
+    excludes=['tkinter', '_tkinter', 'pkg_resources'],
+    noarchive=False,
+)
+
+pyz = PYZ(a.pure, a.zipped_data)
+
+exe = EXE(
+    pyz,
+    a.scripts,
+    [],
+    exclude_binaries=True,
+    name='KALASH_TWEAKER_v2',
+    debug=False,
+    bootloader_ignore_signals=False,
+    strip=False,
+    upx=False,
+    console=False,
+    disable_windowed_traceback=False,
+    argv_emulation=False,
+    target_arch=None,
+    codesign_identity=None,
+    entitlements_file=None,
+    uac_admin=True,
+    version='version_info.txt',
+    manifest='app_manifest.xml',
+    icon='web\\snake.ico',
+)
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=False,
+    name='KALASH_TWEAKER_v2_onedir',
+)

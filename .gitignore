@@ -1,0 +1,20 @@
+# Python runtime artifacts
+__pycache__/
+*.py[cod]
+
+# PyInstaller output (release artifacts are published separately)
+build/
+dist/
+build_verify/
+dist_verify/
+
+# Local recovery copies and editor swap files
+*.bak
+*.tmp
+*.swp
+web/app.js.dash
+web/app.js_repaired*
+
+# Local application data
+logs/
+secrets/

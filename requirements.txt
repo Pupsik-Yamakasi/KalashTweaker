@@ -1,0 +1,6 @@
+psutil
+pywebview
+pypresence
+pillow
+pystray
+pyinstaller>=6,<7

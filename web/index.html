@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KALASH TWEAKER — полная и быстрая настройка твоего железа. Твики, бенчмарк, мониторинг Windows.">
+  <meta name="theme-color" content="#000000">
+  <title>KALASH TWEAKER</title>
+  
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="snake.ico" type="image/x-icon">
+  
+  <!-- Подключаем шрифты SF Pro / IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* iOS Liquid Glass Fallback Preloader */
+    #js-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000000;
+      color: #ffffff;
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+      padding: 32px;
+      transition: opacity 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+    }
+    #js-fallback .glass-spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #0A84FF;
+      border-right-color: #BF5AF2;
+      border-radius: 50%;
+      animation: iosSpin 0.75s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    }
+    #js-fallback .err-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      background: linear-gradient(180deg, #FFFFFF 0%, #64B5FF 80%, #BF5AF2 120%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(10, 132, 255, 0.3);
+    }
+    #js-fallback .err-sub {
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 480px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    #js-fallback .version-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 14px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      letter-spacing: 0.08em;
+    }
+    @keyframes iosSpin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="theme-ios26 antialiased selection:bg-indigo-500/30">
+
+  <!-- Прелоадер в стиле iOS Liquid Glass -->
+  <div id="js-fallback">
+    <div class="glass-spinner"></div>
+    <div class="err-title">KALASH TWEAKER</div>
+    <div class="err-sub">Загрузка стеклянного интерфейса iOS 26…</div>
+    <div class="version-badge" id="fallbackVersion">v2.0</div>
+  </div>
+
+  <!-- Живой фон: сетка и мягкая виньетка без шумовой текстуры -->
+  <div class="bg-layer" aria-hidden="true">
+    <canvas id="bgNet" class="bg-net"></canvas>
+    <div class="bg-vignette"></div>
+  </div>
+
+  <!-- Главный контейнер приложения -->
+  <div class="app">
+    
+    <!-- Стеклянный Сайдбар iOS 26 -->
+    <aside class="sidebar">
+      <div class="sidebar__logo">
+        <div class="logo-mark">
+          <img src="logo.png" alt="KALASH" draggable="false" loading="eager"/>
+        </div>
+        <div class="logo-text">
+          <span class="logo-name">KALASH</span>
+          <span class="logo-sub">TWEAKER</span>
+        </div>
+      </div>
+
+      <div class="sidebar__search">
+        <span class="sidebar__search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </span>
+        <input type="search" id="navSearch" class="sidebar__search-input" placeholder="Поиск твиков..." autocomplete="off" spellcheck="false"/>
+        <kbd class="sidebar__search-kbd">Ctrl K</kbd>
+      </div>
+
+      <!-- Навигация (Генерируется динамически) -->
+      <nav class="nav" id="nav" aria-label="Основная навигация"></nav>
+
+      <div class="sidebar__footer">
+        <button type="button" class="warn-pill" id="adminPill" title="Права доступа">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><path d="M8 1.5l7 12.5H1L8 1.5zm0 4v4m0 2v.5"/></svg>
+          <span id="adminPillText">Проверка прав…</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Основная рабочая область -->
+    <main class="main">
+      <header class="titlebar">
+        <div class="titlebar__left">
+          <img class="titlebar__logo" src="logo.png" alt="" draggable="false"/>
+          <span class="titlebar__label">KALASH TWEAKER</span>
+        </div>
+        
+        <div class="titlebar__right">
+          <button type="button" class="titlebar__cmd" id="cmdOpenBtn" title="Быстрый переключатель (Ctrl+K)">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span>Поиск</span>
+            <kbd>Ctrl K</kbd>
+          </button>
+          
+          <span class="titlebar__pill" id="adminBadge" title="Права доступа">—</span>
+          <span class="titlebar__time" id="statusTime">—:—</span>
+        </div>
+      </header>
+
+      <div id="content" class="content"></div>
+    </main>
+  </div>
+
+  <!-- Командная палитра / Быстрый поиск (Ctrl+K) -->
+  <div class="cmdk" id="cmdk" hidden>
+    <div class="cmdk__backdrop" id="cmdkBackdrop"></div>
+    <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label="Быстрый переход">
+      <div class="cmdk__search">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="cmdkInput" class="cmdk__input" placeholder="Поиск по разделам и 250+ твикам…" autocomplete="off" spellcheck="false"/>
+      </div>
+      <div class="cmdk__list" id="cmdkList"></div>
+      <div class="cmdk__hint">↑↓ выбор · Enter открыть · Esc закрыть</div>
+    </div>
+  </div>
+
+  <!-- Стеклянные Тосты / Уведомления -->
+  <div class="toast-container" id="toasts" aria-live="polite"></div>
+
+  <!-- Скрипты инициализации -->
+  <script>
+    // Кол-во проверок: приложение считает себя загруженным, когда boot()
+    // из app.js дошёл до конца (см. window.appLoaded = true). До этого
+    // момента любая ошибка — это «ошибка интерфейса», после — обычный
+    // runtime-сбой, который не должен уничтожать весь интерфейс.
+    window.appLoaded = false;
+
+    // Single helper for rendering the fallback error screen. Builds the
+    // DOM with safe (non-HTML-injecting) text nodes for any dynamic
+    // part (error message / line number) instead of concatenating them
+    // into innerHTML, while still allowing simple <b> emphasis in the
+    // static instructions.
+    function showFallbackError(subHtml) {
+      var fb = document.getElementById('js-fallback');
+      if (!fb) return;
+      fb.innerHTML =
+        '<div class="err-title">KALASH TWEAKER</div>' +
+        '<div class="err-sub" id="js-fallback-sub"></div>';
+      var sub = document.getElementById('js-fallback-sub');
+      sub.innerHTML = subHtml; // subHtml is always a literal we build below, never raw msg/src
+    }
+
+    function escapeHtml(s) {
+      var div = document.createElement('div');
+      div.textContent = String(s == null ? '' : s);
+      return div.innerHTML;
+    }
+
+    function logRuntimeError(tag, msg, src, line) {
+      try {
+        var rec = {
+          t: new Date().toISOString(),
+          tag: tag,
+          msg: String(msg == null ? '' : msg),
+          src: String(src == null ? '' : src),
+          line: line == null ? null : String(line),
+        };
+        var log = [];
+        try {
+          var prev = window.localStorage && window.localStorage.getItem('kalash_err_log');
+          if (prev) log = JSON.parse(prev);
+        } catch (e) {}
+        log.push(rec);
+        if (log.length > 40) log = log.slice(-40);
+        if (window.localStorage) window.localStorage.setItem('kalash_err_log', JSON.stringify(log));
+      } catch (e) {}
+    }
+
+    window.onerror = function(msg, src, line) {
+      logRuntimeError('error', msg, src, line);
+      // После успешной загрузки интерфейса одиночный runtime-сбой не должен
+      // уничтожать весь UI — показываем тост (если он доступен), а не оверлей.
+      if (window.appLoaded) {
+        if (typeof showToast === 'function') {
+          try {
+            showToast('Сбой интерфейса: ' + String(msg).slice(0, 220), 'error', 8000);
+          } catch (e) {}
+        }
+        return;
+      }
+      showFallbackError(
+        'Ошибка интерфейса Liquid Glass:<br><br>' +
+        escapeHtml(msg) + '<br>(строка ' + escapeHtml(line) + ')<br><br>' +
+        '1) Перезапусти <b>KALASH_TWEAKER.exe</b><br>' +
+        '2) Обнови Microsoft WebView2 Runtime<br>' +
+        '3) Напиши в поддержку @WhyOtto77'
+      );
+    };
+
+    window.addEventListener('unhandledrejection', function(e) {
+      var reason = e && e.reason;
+      var msg = reason && reason.message ? reason.message : String(reason || 'Promise rejection');
+      logRuntimeError('rejection', msg, '', '');
+      if (window.appLoaded && typeof showToast === 'function') {
+        try {
+          showToast('Фоновая операция завершилась ошибкой: ' + msg.slice(0, 220), 'warn', 6000);
+        } catch (err) {}
+      }
+    });
+  </script>
+  
+  <script src="biosData.js"></script>
+  <script src="bgNet.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    setTimeout(function() {
+      var fb = document.getElementById('js-fallback');
+      if (fb && fb.style.display !== 'none' && !window.appLoaded) {
+        showFallbackError(
+          'Интерфейс не загрузился за 15 секунд.<br><br>' +
+          'Возможные причины:<br>' +
+          '1. Устарел WebView2 Runtime<br>' +
+          '2. Защитник / Антивирус блокирует файлы<br>' +
+          '3. Отсутствует файл style.css или app.js<br><br>' +
+          'Перезапусти KALASH_TWEAKER.exe'
+        );
+      }
+    }, 15000);
+  </script>
+</body>
+</html>

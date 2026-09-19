@@ -1074,7 +1074,7 @@ class Api:
         "if ($m -match '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'){ $v = $matches[0] } else { $v = '' };"
         "$r['PowerPlan'] = $v;"
         # Services (starttype)
-        "$svcs = @('SysMain','DiagTrack','WSearch','edgeupdate','BITS','MapsBroker','lfsvc','SharedAccess','XblAuthManager','XblGameSave','XboxNetApiSvc','WpnUserService','TabletInputService','Ndu','NvTelemetryContainer','diagnosticshub.standardcollector.service');"
+        "$svcs = @('SysMain','DiagTrack','WSearch','edgeupdate','BITS','MapsBroker','lfsvc','SharedAccess','XblAuthManager','XblGameSave','XboxNetApiSvc','WpnUserService','TabletInputService','Ndu','NvTelemetryContainer','diagnosticshub.standardcollector.service','dmwappushservice','SgrmBroker','PcaSvc','WerSvc','wcncsvc','Wecsvc');"
         "foreach($s in $svcs){ try{$st=(Get-Service -Name $s -EA SilentlyContinue).StartType;if($st){$r['svc_'+$s]=[string]$st}}catch{} };"
         # Prefetch / memory tuning
         "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters' -EA 0).EnablePrefetcher;"
@@ -2460,6 +2460,13 @@ class Api:
             "tel_extra": data.get("TelExtra"),
             "sch_tel": data.get("SchTel"),
             "svc_diaghub": data.get("svc_diagnosticshub.standardcollector.service"),
+            "svc_diagtrack": data.get("svc_DiagTrack"),
+            "svc_dmwappush": data.get("svc_dmwappushservice"),
+            "svc_sgrm": data.get("svc_SgrmBroker"),
+            "svc_pca": data.get("svc_PcaSvc"),
+            "svc_wer": data.get("svc_WerSvc"),
+            "svc_wcnc": data.get("svc_wcncsvc"),
+            "svc_wec": data.get("svc_Wecsvc"),
             "nic_total": data.get("NicTotal"),
             "nic_off": data.get("NicOff"),
             "wlan_pwr": data.get("WlanPwr"),

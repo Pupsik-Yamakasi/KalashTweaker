@@ -26,7 +26,7 @@
 
 Если Windows показывает предупреждение SmartScreen: правый клик по файлу → «Свойства» → «Разблокировать».
 
-SHA-256: `96C2459B634063B6E69C22F1557B2384301B803D8A381404BBB7FE054764772B`
+SHA-256: `C967912B483E3D2F2D7AB94A34EA5DE7D6FE11693BD7A37F0097A05C567D89BD`
 
 Обсуждение, вопросы и идеи: [Telegram](https://t.me/Kalash_Optimization).
 

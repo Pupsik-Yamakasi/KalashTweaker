@@ -1029,6 +1029,33 @@ class Api:
         "$r['TcpWait'] = $v;"
         "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).MaxUserPort;"
         "$r['MaxPort'] = $v;"
+        # Extra PRO tweaks v2.0 (TCP-стек / стабильность / NTFS / Delivery Optimization)
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).EnableDeadGWDetect;"
+        "$r['DeadGW'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).TCP1323Opts;"
+        "$r['Tcp1323'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).SackOpts;"
+        "$r['SackOpts'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).EnableRSS;"
+        "$r['TcpRss'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' -EA 0).TcpMaxConnectRetransmissions;"
+        "$r['TcpRetrans'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -EA 0).AutoReboot;"
+        "$r['AutoReboot'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' -EA 0).CrashDumpEnabled;"
+        "$r['CrashDump'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' -EA 0).NtfsDisable8dot3NameCreation;"
+        "$r['Ntfs83'] = $v;"
+        "$v = (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config' -EA 0).DODownloadMode;"
+        "$r['DoDl'] = $v;"
+        "$v = (Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -EA 0).DisallowShaking;"
+        "$r['Shake'] = $v;"
+        "$v = (Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -EA 0).SeparateProcess;"
+        "$r['SepProc'] = $v;"
+        "$v = (Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' -EA 0).ThumbnailLivePreviewHoverTime;"
+        "$r['ThumbHover'] = $v;"
+        "$v = (Get-ItemProperty 'HKCU:\\Control Panel\\Desktop' -EA 0).ExtendedUIHoverTime;"
+        "$r['ExtHover'] = $v;"
         # Gaming / Windows features
         "$v = (Get-ItemProperty 'HKCU:\\System\\GameConfigStore' -EA 0).GameDVR_Enabled;"
         "$r['GameDVR'] = $v;"
@@ -1074,7 +1101,7 @@ class Api:
         "if ($m -match '[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}'){ $v = $matches[0] } else { $v = '' };"
         "$r['PowerPlan'] = $v;"
         # Services (starttype)
-        "$svcs = @('SysMain','DiagTrack','WSearch','edgeupdate','BITS','MapsBroker','lfsvc','SharedAccess','XblAuthManager','XblGameSave','XboxNetApiSvc','WpnUserService','TabletInputService','Ndu','NvTelemetryContainer','diagnosticshub.standardcollector.service','dmwappushservice','SgrmBroker','PcaSvc','WerSvc','wcncsvc','Wecsvc');"
+        "$svcs = @('SysMain','DiagTrack','WSearch','edgeupdate','BITS','MapsBroker','lfsvc','SharedAccess','XblAuthManager','XblGameSave','XboxNetApiSvc','WpnUserService','TabletInputService','Ndu','NvTelemetryContainer','diagnosticshub.standardcollector.service','dmwappushservice','SgrmBroker','PcaSvc','WerSvc','wcncsvc','Wecsvc','WMPNetworkSvc','Fax','iphlpsvc');"
         "foreach($s in $svcs){ try{$st=(Get-Service -Name $s -EA SilentlyContinue).StartType;if($st){$r['svc_'+$s]=[string]$st}}catch{} };"
         # Prefetch / memory tuning
         "$v = (Get-ItemProperty 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management\\PrefetchParameters' -EA 0).EnablePrefetcher;"
@@ -1194,6 +1221,15 @@ class Api:
             ("SysResp", ["0", "5"], 5),
             ("TcpWait", ["30", "15", "10"], 4),
             ("MaxPort", ["65534", "65535"], 3),
+            ("DeadGW", ["0"], 2),
+            ("Tcp1323", ["1"], 2),
+            ("SackOpts", ["1"], 2),
+            ("TcpRss", ["1"], 2),
+            ("TcpRetrans", ["3", "2"], 2),
+            ("AutoReboot", ["0"], 2),
+            ("CrashDump", ["0"], 1),
+            ("Ntfs83", ["1"], 3),
+            ("DoDl", ["0"], 2),
             ("GameDVR", ["0"], 8),
             ("GameDVRAdv", ["0"], 4),
             ("GameMode", ["1"], 4),
@@ -1260,6 +1296,7 @@ class Api:
             "BITS": 2, "MapsBroker": 2, "lfsvc": 2, "SharedAccess": 2,
             "XblAuthManager": 3, "XblGameSave": 3, "XboxNetApiSvc": 3,
             "WpnUserService": 3, "TabletInputService": 3, "Ndu": 3,
+            "WMPNetworkSvc": 2, "Fax": 2,
         }
         for svc, pts in svc_disabled_pts.items():
             svc_val = str(data.get(f"svc_{svc}") or "").lower()
@@ -2467,6 +2504,22 @@ class Api:
             "svc_wer": data.get("svc_WerSvc"),
             "svc_wcnc": data.get("svc_wcncsvc"),
             "svc_wec": data.get("svc_Wecsvc"),
+            "svc_wmp": data.get("svc_WMPNetworkSvc"),
+            "svc_fax": data.get("svc_Fax"),
+            "svc_iphlpsvc": data.get("svc_iphlpsvc"),
+            "deadgw": data.get("DeadGW"),
+            "tcp1323": data.get("Tcp1323"),
+            "sack": data.get("SackOpts"),
+            "tcp_rss": data.get("TcpRss"),
+            "tcp_retrans": data.get("TcpRetrans"),
+            "autoreboot": data.get("AutoReboot"),
+            "crashdump": data.get("CrashDump"),
+            "ntfs83": data.get("Ntfs83"),
+            "do_dl": data.get("DoDl"),
+            "shake": data.get("Shake"),
+            "sep_proc": data.get("SepProc"),
+            "thumb_hover": data.get("ThumbHover"),
+            "ext_hover": data.get("ExtHover"),
             "nic_total": data.get("NicTotal"),
             "nic_off": data.get("NicOff"),
             "wlan_pwr": data.get("WlanPwr"),

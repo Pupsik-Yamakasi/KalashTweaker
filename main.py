@@ -36,7 +36,7 @@ from pypresence import Presence
 # ── Constants ────────────────────────────────────────────────────────────
 APP_NAME = "KALASH TWEAKER"
 APP_TAG = "KALASH"
-VERSION = "2.0"
+VERSION = "2.0.2"
 DISCORD_CLIENT_ID = "1542616831012110356"
 
 UPDATE_MANIFEST_URL = "https://api.github.com/repos/Pupsik-Yamakasi/KalashTweaker/releases/latest"

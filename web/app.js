@@ -614,7 +614,6 @@ const OPTIMIZE_PACK = {
   "Память и диски": [
     ["TRIM ON", "fsutil behavior set DisableDeleteNotify 0 | Out-Null", "Включает TRIM для SSD. Поддерживает скорость записи на долгосрочной перспективе.", "Критично для SSD. Без TRIM скорость записи падает со временем. Включено по умолчанию."],
     ["Снять лимит памяти (MAXMEM)", "bcdedit /deletevalue '{current}' truncatememory 2>$null", "Убирает ограничение объёма памяти из BCD (msconfig «Максимум памяти» / MAXMEM), из-за которого система видит только часть оперативки (например 2 ГБ из 16).", "Нужна перезагрузка. Лимит обычно стоит в msconfig или от сторонних утилит."],
-    ["NTFS: без имен 8.3", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\FileSystem' /v NtfsDisable8dot3NameCreation /t REG_DWORD /d 1 /f", "Не создаёт короткие имена файлов 8.3 — меньше операций записи на диск.", "Существующие файлы не трогаются; влияет только на новые."],
   ],
 
   "Клавиатура и ввод": [
@@ -637,24 +636,6 @@ const OPTIMIZE_PACK = {
   "Сеть и интернет": [
     ["Эко-режим сети OFF", "$cls='HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Class\\{4d36e972-e325-11ce-bfc1-08002be10318}'; Get-ChildItem $cls -EA 0 | Where-Object {$_.PSChildName -match '^\\d+$'} | ForEach-Object { $k=$cls+'\\'+$_.PSChildName; if((Get-ItemProperty $k -EA 0).DriverDesc){ Set-ItemProperty $k -Name PnPCapabilities -Value 24 -Type DWord -EA 0 } }; Get-NetAdapter -EA 0 | Where-Object {$_.Status -eq 'Up'} | ForEach-Object { try{ Set-NetAdapterAdvancedProperty -Name $_.Name -RegistryKeyword '*EEE' -RegistryValue 0 -NoRestart -EA 0 }catch{}; try{ Set-NetAdapterAdvancedProperty -Name $_.Name -RegistryKeyword 'EnergyEfficientEthernet' -RegistryValue 0 -NoRestart -EA 0 }catch{} }; powercfg /setacvalueindex scheme_current 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0; powercfg /setdcvalueindex scheme_current 19cbb8fa-5279-450e-9fac-8a3d5fedd0c1 12bbebe6-58d6-4636-95bb-3217ef867c1a 0; powercfg /setactive scheme_current", "Полностью отключает энергосбережение сетевых адаптеров: PnPCapabilities=24 на всех NIC (запрет отключения устройства), EEE (Green Ethernet) и энергосбережение Wi-Fi — максимум производительности.", "Для десктопов и игровых ПК. На ноутбуках от батареи расход вырастет."],
     ["Запуски по интернету OFF", "reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\BackgroundAccessApplications\" /v GlobalUserDisabled /t REG_DWORD /d 1 /f; schtasks /change /tn \"Microsoft\\Windows\\UpdateOrchestrator\\USOClient\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\UpdateOrchestrator\\Schedule Scan\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\WindowsUpdate\\Scheduled Start\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\WindowsUpdate\\Automatic App Update\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\WS\\WSUpdateOrchestrator\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\ApplicationData\\appuriverifierdaily\" /disable 2>$null; schtasks /change /tn \"Microsoft\\Windows\\ApplicationData\\appuriverifierinstall\" /disable 2>$null; reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\WindowsUpdate\\AU\" /v NoAutoUpdate /t REG_DWORD /d 1 /f; reg add \"HKLM\\SOFTWARE\\Policies\\Microsoft\\WindowsStore\" /v AutoDownload /t REG_DWORD /d 2 /f", "Отключает фоновые запуски по сети: задачи планировщика UpdateOrchestrator/Scheduled Start, Background Apps (UWP), автообновление Store и автозагрузку Windows Update (NoAutoUpdate).", "Windows Update останется доступен вручную через Параметры."],
-["P2P-раздача обновлений OFF", "reg add 'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\DeliveryOptimization\\Config' /v DODownloadMode /t REG_DWORD /d 0 /f", "Обновления Windows качаются только напрямую — ПК не раздаёт их другим компьютерам.", "Каналом больше не «пользуются» соседние машины. Скорость получения не падает."],
-    ["Dead GW Detect OFF", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' /v EnableDeadGWDetect /t REG_DWORD /d 0 /f", "Отключает авто-обнаружение «мёртвого» шлюза. Сетевой канал быстрее восстанавливается при сбое.", "Чистый сетевой твик — негативного влияния нет. Помогает при нестабильном интернете."],
-    ["TCP1323 + SACK ON", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' /v TCP1323Opts /t REG_DWORD /d 1 /f; reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' /v SackOpts /t REG_DWORD /d 1 /f", "RFC 1323: масштабирование окна приёма + выборочная переотправка потерянных пакетов (SACK).", "Ускоряет передачу на быстрых каналах. Безопасно для локальных сетей и домашнего интернета."],
-    ["TCP RSS ON", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' /v EnableRSS /t REG_DWORD /d 1 /f", "RSS — обработка входящих пакетов распределяется по всем ядрам CPU.", "Снижает нагрузку на одно ядро при загрузках и в онлайн-играх."],
-    ["TcpMaxConnectRetransmissions 3", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters' /v TcpMaxConnectRetransmissions /t REG_DWORD /d 3 /f", "Меньше повторных SYN при установке соединения — быстрее открываются сайты и серверы.", "На нормальном канале не вызывает ошибок подключения."],
-    ["Лишние сетевые службы OFF", "$k=@('WMPNetworkSvc','Fax'); foreach($s in $k){ sc.exe config $s start= disabled 2>$null | Out-Null; Stop-Service $s -Force -EA 0 }; sc.exe config iphlpsvc start= demand 2>$null | Out-Null; $LASTEXITCODE = 0", "Отключает службы шаринга медиа (WMPNetworkSvc) и факсов (Fax); IPv6-переход iphlpsvc переводится в ручной запуск.", "Обычный интернет, игры и сетевые папки продолжают работать."],
-  ],
-
-  "Система": [
-    ["Авто-перезагрузка при BSOD OFF", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' /v AutoReboot /t REG_DWORD /d 0 /f", "При синем экране ПК не перезагружается сам — остаётся на экране ошибки с кодом.", "После BSOD перезагружайтесь вручную. Полезно для диагностики."],
-    ["BSOD: дампы OFF", "reg add 'HKLM\\SYSTEM\\CurrentControlSet\\Control\\CrashControl' /v CrashDumpEnabled /t REG_DWORD /d 0 /f", "Не создаёт дампы памяти при BSOD — меньше записей на диск и свободнее диск.", "Теряется возможность детального анализа аварии через дамп. Только для опытных."],
-  ],
-
-  "Проводник": [
-    ["Aero Shake OFF", "reg add 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' /v DisallowShaking /t REG_DWORD /d 1 /f", "Отключает «встряхивание окна» — случайное сворачивание всех окон движением мыши.", "Игры и работа не страдают; пропадают случайные срабатывания."],
-    ["Проводник: отдельный процесс", "reg add 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' /v SeparateProcess /t REG_DWORD /d 1 /f", "Каждая папка Проводника — отдельный процесс. Краш одной не валит весь Explorer.", "Небольшой расход памяти на каждое окно Проводника."],
-    ["Быстрые превью панели задач", "reg add 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced' /v ThumbnailLivePreviewHoverTime /t REG_DWORD /d 100 /f", "Миниатюры окон на панели задач появляются за 100 мс вместо 400.", "Отзывчивее интерфейс при переключении окон."],
-    ["Мгновенные всплывающие панели", "reg add 'HKCU\\Control Panel\\Desktop' /v ExtendedUIHoverTime /t REG_DWORD /d 400 /f", "Панели у часов, звука и трея открываются без задержки наведения.", "Безопасный твик отзывчивости интерфейса."],
   ],
 };
 
@@ -2412,21 +2393,6 @@ const smartSum = el("div", { class: "tweak-group__count", style: "margin-top:6px
     "Телеметрия OFF (службы)": (a) => ["svc_diagtrack","svc_dmwappush","svc_diaghub","svc_sgrm","svc_pca"].every(n => !a.reg[n] || a.reg[n] === "Disabled"),
     "Сбор данных OFF (безопасные)": (a) => ["svc_wer","svc_wcnc","svc_wec"].every(n => !a.reg[n] || a.reg[n] === "Disabled"),
 
-    // ── Экстра (сетевые/системные PRO-твики) ──
-    "Dead GW Detect OFF": (a) => a.reg.deadgw === 0,
-    "TCP1323 + SACK ON": (a) => a.reg.tcp1323 === 1 && a.reg.sack === 1,
-    "TCP RSS ON": (a) => a.reg.tcp_rss === 1,
-    "TcpMaxConnectRetransmissions 3": (a) => a.reg.tcp_retrans === 3,
-    "Лишние сетевые службы OFF": (a) => ["svc_wmp","svc_fax"].every(n => !a.reg[n] || a.reg[n] === "Disabled") && (!a.reg.svc_iphlpsvc || a.reg.svc_iphlpsvc === "Manual"),
-    "P2P-раздача обновлений OFF": (a) => a.reg.do_dl === 0,
-    "Aero Shake OFF": (a) => a.reg.shake === 1,
-    "Проводник: отдельный процесс": (a) => a.reg.sep_proc === 1,
-    "Быстрые превью панели задач": (a) => a.reg.thumb_hover === 100,
-    "Мгновенные всплывающие панели": (a) => a.reg.ext_hover === 400,
-    "Авто-перезагрузка при BSOD OFF": (a) => a.reg.autoreboot === 0,
-    "BSOD: дампы OFF": (a) => a.reg.crashdump === 0,
-    "NTFS: без имен 8.3": (a) => a.reg.ntfs83 === 1,
-
     // ── Память и диски ──
     "DisablePagingExecutive": (a) => a.reg.dis_paging === 1,
     "NT Kernel Pageable OFF": (a) => a.reg.dis_paging === 1,
@@ -2543,12 +2509,6 @@ balanced: new Set([
 "Задачи планировщика (телеметрия) OFF", "diagnosticshub OFF",
       "Телеметрия OFF (службы)", "Сбор данных OFF (безопасные)",
       "Снять лимит памяти (MAXMEM)",
-      "Dead GW Detect OFF", "TCP1323 + SACK ON", "TCP RSS ON",
-      "TcpMaxConnectRetransmissions 3", "P2P-раздача обновлений OFF",
-      "Aero Shake OFF", "Проводник: отдельный процесс",
-      "Быстрые превью панели задач", "Мгновенные всплывающие панели",
-      "Авто-перезагрузка при BSOD OFF", "BSOD: дампы OFF",
-      "NTFS: без имен 8.3", "Лишние сетевые службы OFF",
     ]),
 gaming: new Set([
       "TRIM ON", "Power Throttling OFF", "Win32Priority = 38",
@@ -2575,12 +2535,6 @@ gaming: new Set([
       "TcpMaxDupAcks 2", "Nagle OFF (AFD/сеть)", "MSMQ OFF (очереди сообщений)",
       "WER OFF (отчёты об ошибках)", "Boot Optimization Delay OFF",
       "NDU OFF (служба сетевых данных)",
-      "Dead GW Detect OFF", "TCP1323 + SACK ON", "TCP RSS ON",
-      "TcpMaxConnectRetransmissions 3", "P2P-раздача обновлений OFF",
-      "Aero Shake OFF", "Проводник: отдельный процесс",
-      "Быстрые превью панели задач", "Мгновенные всплывающие панели",
-      "Авто-перезагрузка при BSOD OFF", "BSOD: дампы OFF",
-      "NTFS: без имен 8.3", "Лишние сетевые службы OFF",
     ]),
     maximum: new Set([
       "TRIM ON", "Power Throttling OFF", "Win32Priority = 38",
@@ -2614,12 +2568,6 @@ gaming: new Set([
       "DisablePagingExecutive", "NT Kernel Pageable OFF",
       "Cache Manager Workingset Trim", "Memory Compression OFF",
       "Clear Pagefile On Shutdown",
-      "Dead GW Detect OFF", "TCP1323 + SACK ON", "TCP RSS ON",
-      "TcpMaxConnectRetransmissions 3", "P2P-раздача обновлений OFF",
-      "Aero Shake OFF", "Проводник: отдельный процесс",
-      "Быстрые превью панели задач", "Мгновенные всплывающие панели",
-      "Авто-перезагрузка при BSOD OFF", "BSOD: дампы OFF",
-      "NTFS: без имен 8.3", "Лишние сетевые службы OFF",
     ]),
   };
   const DEEP_TWEAKS = new Set([
